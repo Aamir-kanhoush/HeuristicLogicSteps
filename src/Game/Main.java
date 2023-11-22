@@ -6,8 +6,10 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner=new Scanner(System.in);
+
         State state = new State(new Grid());
-        state.grid.loadLevel("D:\\Intellij projects\\LogicSteps\\src\\Game\\level.txt");
+
+        state.grid.loadLevel("D:\\Intellij projects\\HeuristicLogicSteps\\src\\Game\\level4.txt");
         String Mode="";
         while (!Mode.equals("exit")) {
             System.out.println("\nAvailable Modes:\nhmn: You play the game\nbfs: solve the game using BFS\ndfs: solve the game using DFS\nrdfs: solve the game using recursive DFS\nucs: solve the game using UCS\nastar: solve the game using A*\nexit: well...exit obviously\nEnter game mode:");
@@ -25,7 +27,7 @@ public class Main {
 
                 case "dfs":
                     System.out.println("DFS is on the game");
-                    BFS.searchBFS(state, 10000);
+                    DFS.searchDFS(state, 10000);
                     break;
 
                 case "rdfs":
@@ -36,6 +38,11 @@ public class Main {
                 case "ucs":
                     System.out.println("UCS is on the game");
                     UCS.searchUCS(state, 10000);
+                    break;
+
+                case "astar":
+                    System.out.println("A* is on the game");
+                    Astar.searchAstar(state, 10000);
                     break;
 
                 case "exit":
@@ -53,6 +60,7 @@ public class Main {
         int positionIndex, direction;
         state.grid.printGrid();
         state.grid.printLocations();
+        state.grid.printGoal();
         while (!Rules.isWon(state)) {
             if (Rules.isStuck(state)) {
                 System.out.println("Game Over!\nYou Lost");
@@ -68,6 +76,7 @@ public class Main {
                     state=Move.moveLocation(positionIndex,direction,state);
                     state.grid.printGrid();
                     state.grid.printLocations();
+                    state.grid.printGoal();
                 }else {
                     System.out.println("Invalid move.");
                 }

@@ -1,8 +1,6 @@
 package Game;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public class BFS {
     public static void searchBFS(State initialState, int maxDepth) {
@@ -24,6 +22,7 @@ public class BFS {
             Set<State> nextStates = State.getNextState(currentState);
             for (State nextState : nextStates) {
                 if (!queue.contains(nextState)) {
+                    nextState.parentState = currentState;
                     queue.add(nextState);
                 }
             }
@@ -36,7 +35,7 @@ public class BFS {
         State currentState = state;
         while (currentState != null) {
             stack.push(currentState);
-            currentState = State.getParentState(currentState);
+            currentState = currentState.parentState;
         }
         System.out.println("Steps to reach the winning state:");
         while (!stack.isEmpty()) {

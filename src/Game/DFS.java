@@ -1,7 +1,6 @@
 package Game;
 
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class DFS {
     public static void searchDFS(State initialState, int maxDepth) {
@@ -9,7 +8,7 @@ public class DFS {
         stack.push(initialState);
         while (!stack.isEmpty()) {
 
-            if (stack.size() > maxDepth) { 
+            if (stack.size() > maxDepth) {
                 System.out.println("No winning state found within the specified depth");
                 return;
             }
@@ -24,6 +23,7 @@ public class DFS {
             Set<State> nextStates = State.getNextState(currentState);
             for (State nextState : nextStates) {
                 if (!stack.contains(nextState)) {
+                    nextState.parentState = currentState;
                     stack.push(nextState);
                 }
             }
@@ -36,7 +36,7 @@ public class DFS {
         State currentState = state;
         while (currentState != null) {
             stack.push(currentState);
-            currentState = State.getParentState(currentState);
+            currentState = currentState.parentState;
         }
         System.out.println("Steps to reach the winning state:");
         while (!stack.isEmpty()) {

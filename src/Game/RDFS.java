@@ -1,8 +1,6 @@
 package Game;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class RDFS {
     private static Set<State> visitedStates = new HashSet<>();
@@ -34,6 +32,7 @@ public class RDFS {
 
         for (State nextState : nextStates) {
             if (!visitedStates.contains(nextState)) {
+                nextState.parentState = currentState;
                 System.out.println("Depth " + (currentDepth + 1));
                 searchDFSRecursive(nextState, maxDepth, currentDepth + 1);
             }
@@ -46,7 +45,7 @@ public class RDFS {
 
         while (currentState != null) {
             stack.push(currentState);
-            currentState = State.getParentState(currentState);
+            currentState = currentState.parentState;
         }
 
         System.out.println("Steps to reach the winning state:");

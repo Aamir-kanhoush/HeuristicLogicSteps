@@ -91,7 +91,7 @@ public class Move {
                     return state;
             }
             State copy=State.deepCopy(state);
-            copy.grid.grid[x][y] += 1;
+            //copy.grid.grid[x][y] += 1;
             copy.grid.positions.set(positionIndex, new Coordinate(x, y, cost));
             return copy;
         } else {

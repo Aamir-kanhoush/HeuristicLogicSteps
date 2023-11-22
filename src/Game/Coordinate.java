@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Coordinate implements Comparable<Coordinate>{
     private int X;
     private int Y;
-    private int cost;
+    public int cost;
 
     public Coordinate(int x, int y,int cost) {
         this.X = x;
@@ -47,4 +47,8 @@ public class Coordinate implements Comparable<Coordinate>{
     public int compareTo(Coordinate c) {
         return this.getCost()-c.getCost();
         }
-  }
+
+
+
+
+}

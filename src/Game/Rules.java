@@ -1,17 +1,21 @@
 package Game;
 
+import java.util.*;
+
 public class Rules {
 
 
     public static boolean isWon(State state) {
-        for (int i = 0; i < state.grid.rows; i++) {
-            for (int j = 0; j < state.grid.columns; j++) {
-                if (!(state.grid.grid[i][j] == 0 || state.grid.grid[i][j] == 5)) {
-                    return false;
-                }
+        List<Coordinate> positions = state.grid.positions != null ? new ArrayList<>(state.grid.positions) : new ArrayList<>();// if not null make arraylist copy of positions else make empty one
+        Coordinate goal = state.grid.goal;
+
+        for (Coordinate position : positions) {
+            if (position.getX() == goal.getX() && position.getY() == goal.getY()) {
+                return true;
             }
         }
-        return true;
+
+        return false;
     }
 
 

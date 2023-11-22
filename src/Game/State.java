@@ -4,6 +4,7 @@ import java.util.*;
 
 public class State {
     public Grid grid;
+    public State parentState;
     public static Map<State, State> parentMap = new HashMap<>();
     public State(Grid grid) {
         this.grid = grid;
@@ -45,6 +46,7 @@ public class State {
         Grid copiedGrid = new Grid();
         copiedGrid.rows = state.grid.rows;
         copiedGrid.columns = state.grid.columns;
+        copiedGrid.goal=new Coordinate(state.grid.goal.getX(),state.grid.goal.getY(),0 );
         copiedGrid.grid=new int[copiedGrid.rows][copiedGrid.columns];
         for (int i=0;i<copiedGrid.rows;i++){
             for (int j=0;j<copiedGrid.columns;j++){
@@ -69,12 +71,10 @@ public class State {
                 if (Move.isValidMove(i, direction, state)) {
                     State copy = State.deepCopy(state);
                     copy=Move.moveLocation(i, direction, copy);
+                    copy.parentState = state;
                     nextStates.add(copy);
-                    parentMap.put(copy, state);
                 }
-
             }
-
         }
         return nextStates;
     }

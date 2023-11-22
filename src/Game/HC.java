@@ -3,52 +3,69 @@ package Game;
 import java.util.*;
 
 public class HC {
-    private static Set<State> visitedStates = new HashSet<>();
-    private static boolean solutionFound = false;
-    public static void searchRDFS(State initialState, int maxDepth) {
-        visitedStates.clear();
-        solutionFound = false;
-        searchDFSRecursive(initialState, maxDepth, 0);
+
+    public static void searchHillClimbing(State initialState, int maxDepth) {
+        State currentState = initialState;
+        int currentDepth = 0;
+
+        while (currentDepth < maxDepth) {
+            System.out.println("Depth: " + currentDepth);
+            System.out.println("Current state: " + currentState);
+            System.out.println("Heuristic value: " + calculateHeuristic(currentState));
+
+            Set<State> nextStates = State.getNextState(currentState);
+            State bestState = null;
+            int bestHeuristic = Integer.MIN_VALUE;
+
+            for (State nextState : nextStates) {
+                int heuristic = calculateHeuristic(nextState);
+                if (heuristic > bestHeuristic) {
+                    bestState = nextState;
+                    bestHeuristic = heuristic;
+                }
+            }
+
+            if (bestState == null) {
+                System.out.println("No better state found");
+                return;
+            }
+
+            if (Rules.isWon(bestState)) {
+                System.out.println("Winning state found: " + bestState);
+                printPath(bestState);
+                return;
+            }
+
+            currentState = bestState;
+            currentDepth++;
+        }
+
+        System.out.println("No winning state found within the specified depth");
     }
 
-    private static void searchDFSRecursive(State currentState, int maxDepth, int currentDepth) {
-        if (currentDepth > maxDepth || solutionFound) {
-            return;
-        }
-
-        currentState.grid.printLocations();
-        currentState.grid.printGrid();
-
-        if (Rules.isWon(currentState)) {
-            System.out.println("Winning state found!");
-            solutionFound = true;
-            printSteps(currentState);
-            return;
-        }
-
-        visitedStates.add(currentState);
-        Set<State> nextStates = State.getNextState(currentState);
-
-        for (State nextState : nextStates) {
-            if (!visitedStates.contains(nextState)) {
-                System.out.println("Depth " + (currentDepth + 1));
-                searchDFSRecursive(nextState, maxDepth, currentDepth + 1);
+    private static int calculateHeuristic(State state) {
+        int heuristicValue = 0;
+        for (int i = 0; i < state.grid.rows; i++) {
+            for (int j = 0; j < state.grid.rows; j++) {
+                if (state.grid.grid[i][j] != 0) {
+                    heuristicValue += Math.abs(state.grid.grid[i][j] - 5);
+                }
             }
         }
+        return heuristicValue;
     }
 
-    private static void printSteps(State state) {
-        Stack<State> stack = new Stack<>();
+    private static void printPath(State state) {
+        LinkedList<State> stack = new LinkedList<>();
         State currentState = state;
-
         while (currentState != null) {
             stack.push(currentState);
             currentState = State.getParentState(currentState);
         }
-
-        System.out.println("Steps to reach the winning state:");
+        System.out.println("Path to the winning state:");
         while (!stack.isEmpty()) {
-            System.out.println(stack.pop());
+            State step = stack.pop();
+            System.out.println(step);
         }
     }
 }

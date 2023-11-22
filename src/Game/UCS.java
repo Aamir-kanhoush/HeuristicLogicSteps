@@ -1,13 +1,18 @@
 package Game;
 
 import java.util.*;
-
 public class UCS {
+    /* BIG NOTE HERE THE ORDER OF THE POSITION(COST)
+WILL AFFECT THE ORDER OF THE VISITED STATES
+BECAUSE THE GETNEXTSTATE FUNCTION IS GOING OVER THE POSITIONS IN ORDER
+SO IF YOU PUT BIG COST BEFORE SMALL IT WOULD BE VISITED FIRST
+BUT IT SHOULDN'T BE THAT BIG A DEAL
+*/
+    private static Map<State, State> cameFrom = new HashMap<>();
 
     public static void searchUCS(State initialState, int maxDepth) {
         PriorityQueue<State> queue = new PriorityQueue<>(Comparator.comparingInt(s -> s.grid.positions.stream().mapToInt(Coordinate::getCost).sum()));
         Map<State, Integer> costSoFar = new HashMap<>();
-        Map<State, State> cameFrom = new HashMap<>();
 
         queue.add(initialState);
         costSoFar.put(initialState, 0);
@@ -37,7 +42,7 @@ public class UCS {
                 if (!costSoFar.containsKey(nextState) || newCost < costSoFar.get(nextState)) {
                     costSoFar.put(nextState, newCost);
                     queue.add(nextState);
-                    cameFrom.put(nextState, currentState);
+                    cameFrom.put(nextState, currentState); // Set the cameFrom map
                 }
             }
         }
@@ -49,7 +54,7 @@ public class UCS {
         State currentState = state;
         while (currentState != null) {
             stack.push(currentState);
-            currentState = State.getParentState(currentState);
+            currentState = cameFrom.get(currentState); // Use the cameFrom map
         }
         System.out.println("Steps to reach the winning state:");
         while (!stack.isEmpty()) {

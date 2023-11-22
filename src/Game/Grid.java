@@ -7,6 +7,9 @@ import java.io.*;
 public class Grid {
     public int rows, columns;
     public int[][] grid;
+
+    public Coordinate goal;
+
     public ArrayList<Coordinate> positions;
 
 
@@ -17,7 +20,6 @@ public class Grid {
 
             rows = scanner.nextInt();
             columns = scanner.nextInt();
-
             grid = new int[rows][columns];
 
             for (int i = 0; i < rows; i++) {
@@ -25,7 +27,9 @@ public class Grid {
                     grid[i][j] = scanner.nextInt();
                 }
             }
-
+            int goalX=scanner.nextInt();
+            int goalY=scanner.nextInt();
+            goal=new Coordinate(goalX,goalY,0);
 
             positions = new ArrayList<>();
             while (scanner.hasNext()) {
@@ -35,11 +39,14 @@ public class Grid {
                 positions.add(new Coordinate(x, y, cost));
             }
 
+
+
             scanner.close();
         } catch (FileNotFoundException e) {
             System.out.println("Error loading the level from the file: " + filepath);
         }
     }
+
 
 
     public void printGrid() {
@@ -61,7 +68,11 @@ public class Grid {
         }
     }
 
-
+    public void printGoal(){
+        System.out.println("Goal:" + "\nX: " + (goal.getX()) + ", Y: " + (goal.getY()));
+    }
 
 
 }
+
+
