@@ -3,69 +3,86 @@ package Game;
 import java.util.*;
 
 public class HC {
-
     public static void searchHillClimbing(State initialState, int maxDepth) {
-        State currentState = initialState;
-        int currentDepth = 0;
-
-        while (currentDepth < maxDepth) {
-            System.out.println("Depth: " + currentDepth);
-            System.out.println("Current state: " + currentState);
-            System.out.println("Heuristic value: " + calculateHeuristic(currentState));
-
-            Set<State> nextStates = State.getNextState(currentState);
+        int depth = 0;
+        int visitedCount = 0;
+        while (depth < maxDepth) {
+            System.out.println("Depth: " + depth);
+            initialState.grid.printGrid();
+            initialState.grid.printGoal();
+            initialState.grid.printLocations();
+            Set<State> nextStates = State.getNextState(initialState);
+            Coordinate movedCoordinate = getMovedCoordinate(State.getParentState(initialState), initialState);
+            System.out.println("Heuristic value: "+ heuristicValue(initialState));
             State bestState = null;
-            int bestHeuristic = Integer.MIN_VALUE;
-
-            for (State nextState : nextStates) {
-                int heuristic = calculateHeuristic(nextState);
-                if (heuristic > bestHeuristic) {
-                    bestState = nextState;
-                    bestHeuristic = heuristic;
+            int bestCount = Integer.MAX_VALUE;
+            for (State state : nextStates) {
+                visitedCount++;
+                if (state != null && state.grid != null) {
+                    movedCoordinate = getMovedCoordinate(state, initialState);
+                    int count = heuristicValue(state);
+                    if (count < bestCount) {
+                        bestState = state;
+                        bestCount = count;
+                    }
                 }
             }
-
             if (bestState == null) {
-                System.out.println("No better state found");
-                return;
+                break;
             }
-
-            if (Rules.isWon(bestState)) {
-                System.out.println("Winning state found: " + bestState);
-                printPath(bestState);
-                return;
-            }
-
-            currentState = bestState;
-            currentDepth++;
+            bestState.parentState = initialState;
+            initialState = bestState;
+            depth++;
         }
-
-        System.out.println("No winning state found within the specified depth");
+        System.out.println("Maximum found (it may be local):");
+        System.out.println("Number of visited states: " + visitedCount);
+        printSteps(initialState, depth);
     }
 
-    private static int calculateHeuristic(State state) {
-        int heuristicValue = 0;
-        for (int i = 0; i < state.grid.rows; i++) {
-            for (int j = 0; j < state.grid.rows; j++) {
-                if (state.grid.grid[i][j] != 0) {
-                    heuristicValue += Math.abs(state.grid.grid[i][j] - 5);
+    private static int heuristicValue(State state) {
+        int count = 0;
+        Grid grid = state.grid;
+        for (int i = 0; i < grid.rows; i++) {
+            for (int j = 0; j < grid.columns; j++) {
+                if (grid.grid[i][j] != 0 && grid.grid[i][j] != 5) {
+                    count += Math.abs(grid.goal.getX() - i) + Math.abs(grid.goal.getY() - j);
                 }
             }
         }
-        return heuristicValue;
+        return count;
     }
 
-    private static void printPath(State state) {
+    private static Coordinate getMovedCoordinate(State currentState, State nextState) {
+        ArrayList<Coordinate> currentCoordinates = currentState != null ? currentState.grid.positions : new ArrayList<>();
+        ArrayList<Coordinate> nextCoordinates = nextState.grid.positions;
+
+        for (Coordinate nextCoordinate : nextCoordinates) {
+            if (!currentCoordinates.contains(nextCoordinate)) {
+                return nextCoordinate;
+            }
+        }
+
+        return nextCoordinates.size() > 0 ? nextCoordinates.get(0) : null;
+    }
+
+    private static void printSteps(State state, int depth) {
         LinkedList<State> stack = new LinkedList<>();
         State currentState = state;
         while (currentState != null) {
             stack.push(currentState);
-            currentState = State.getParentState(currentState);
+            currentState = currentState.parentState;
         }
-        System.out.println("Path to the winning state:");
+        System.out.println("Steps taken state:");
+        state.grid.printGoal();
         while (!stack.isEmpty()) {
             State step = stack.pop();
             System.out.println(step);
+            step.grid.printGrid();
+            Coordinate movedCoordinate = getMovedCoordinate(step, state);
+            int moveCost = movedCoordinate != null ? movedCoordinate.getCost() * step.grid.grid[movedCoordinate.getX()][movedCoordinate.getY()] : 0;
+            int heuristic = heuristicValue(step);
+            System.out.println("Heuristic value: " + heuristic);
+            System.out.println("Depth: " + (depth - stack.size()));
         }
     }
 }

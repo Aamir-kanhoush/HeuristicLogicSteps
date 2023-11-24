@@ -69,7 +69,7 @@ public class Grid {
     }
 
     public void printGoal(){
-        System.out.println("Goal:" + "\nX: " + (goal.getX()) + ", Y: " + (goal.getY()));
+        System.out.println("Goal:" + " X: " + (goal.getX()) + ", Y: " + (goal.getY()));
     }
 
 

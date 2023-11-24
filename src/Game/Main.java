@@ -9,10 +9,10 @@ public class Main {
 
         State state = new State(new Grid());
 
-        state.grid.loadLevel("D:\\Intellij projects\\HeuristicLogicSteps\\src\\Game\\level4.txt");
+        state.grid.loadLevel("D:\\Intellij projects\\HeuristicLogicSteps\\src\\Game\\level2.txt");
         String Mode="";
         while (!Mode.equals("exit")) {
-            System.out.println("\nAvailable Modes:\nhmn: You play the game\nbfs: solve the game using BFS\ndfs: solve the game using DFS\nrdfs: solve the game using recursive DFS\nucs: solve the game using UCS\nastar: solve the game using A*\nexit: well...exit obviously\nEnter game mode:");
+            System.out.println("\nAvailable Modes:\nhmn: You play the game\nbfs: solve the game using BFS\ndfs: solve the game using DFS\nrdfs: solve the game using recursive DFS\nucs: solve the game using UCS\na*: solve the game using A*\nhc:try to solve the game using Hill Climbing\nexit: well...exit obviously\nEnter game mode:");
             Mode= scanner.next();
             switch (Mode) {
                 case "hmn":
@@ -40,9 +40,14 @@ public class Main {
                     UCS.searchUCS(state, 10000);
                     break;
 
-                case "astar":
+                case "a*":
                     System.out.println("A* is on the game");
                     Astar.searchAstar(state, 10000);
+                    break;
+
+                case "hc":
+                    System.out.println("Hill Climbing is on the game");
+                    HC.searchHillClimbing(state, 100);
                     break;
 
                 case "exit":
