@@ -10,15 +10,15 @@ public class HC {
 
     public static State getBestNeighbor(State currentState) {
         State bestNeighbor = null;
-        int maxHeuristic = Integer.MIN_VALUE;
+        int minHeuristic = Integer.MIN_VALUE;
 
         Set<State> neighbors = State.getNextState(currentState);
         for (State neighbor : neighbors) {
 
             for (Coordinate c : neighbor.grid.positions) {
                 int heuristic = heuristic(neighbor.grid.goal, c);
-                if (heuristic > maxHeuristic) {
-                    maxHeuristic = heuristic;
+                if (heuristic > minHeuristic) {
+                    minHeuristic = heuristic;
                     bestNeighbor = neighbor;
                     if(Rules.isWon(bestNeighbor)){
                         return bestNeighbor; }
