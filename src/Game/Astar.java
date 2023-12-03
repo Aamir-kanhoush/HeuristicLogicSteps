@@ -4,8 +4,11 @@ import java.util.*;
 
 
 public class Astar {
-    public static void searchAstar(State initialState, int maxDepth) {
-        PriorityQueue<State> frontier = new PriorityQueue<>(Comparator.comparingInt(state -> heuristic(state.grid.positions.get(0), state.grid.goal) + state.grid.positions.get(0).getCost()));
+    public static void searchAstar(State initialState) {
+        initialState.grid.printGrid();
+        initialState.grid.printGoal();
+        initialState.grid.printLocations();
+        PriorityQueue<State> frontier = new PriorityQueue<>(Comparator.comparingInt(state -> heuristic(state.grid.positions.get(0), state.grid.goal) + state.getTotalCost()));
         Set<State> explored = new HashSet<>();
         frontier.add(initialState);
 
@@ -14,7 +17,7 @@ public class Astar {
             explored.add(state);
 
             if (Rules.isWon(state)) {
-                System.out.println("Solution found!");
+                System.out.println("Solution found!\nThe Path:");
                 printPathAndHeuristics(state);
                 return;
             }
@@ -27,11 +30,11 @@ public class Astar {
             }
         }
 
-        System.out.println("No solution found within depth limit");
+        System.out.println("No solution found.");
     }
 
     private static int heuristic(Coordinate current, Coordinate goal) {
-        return current.getCost() + current.getX() * current.getY();
+        return Math.abs(current.getX() - goal.getX()) + Math.abs(current.getY() - goal.getY());
     }
 
     private static void printPathAndHeuristics(State goalState) {
@@ -46,6 +49,8 @@ public class Astar {
         for (State s : path) {
             System.out.println("State: " + s);
             System.out.println("Heuristic value: " + heuristic(s.grid.positions.get(0), s.grid.goal));
+            System.out.println("Total cost: "+s.getTotalCost());
+            System.out.println("sum of them (comparison based on this): "+ (heuristic(s.grid.positions.get(0), s.grid.goal)+s.getTotalCost()) );
             System.out.println("Depth: " + path.indexOf(s));
         }
 
@@ -53,4 +58,3 @@ public class Astar {
     }
 
 }
-

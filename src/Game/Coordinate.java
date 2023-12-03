@@ -48,7 +48,12 @@ public class Coordinate implements Comparable<Coordinate>{
         return this.getCost()-c.getCost();
         }
 
-
+    @Override
+    public String toString(){
+        StringBuilder string = new StringBuilder();
+        string.append("(X: ").append(this.X).append(", Y: ").append(this.Y).append(")");
+        return string.toString();
+    }
 
 
 }

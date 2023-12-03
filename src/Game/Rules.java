@@ -6,7 +6,7 @@ public class Rules {
 
 
     public static boolean isWon(State state) {
-        List<Coordinate> positions = state.grid.positions != null ? new ArrayList<>(state.grid.positions) : new ArrayList<>();// if not null make arraylist copy of positions else make empty one
+        List<Coordinate> positions = state.grid.positions != null ? new ArrayList<>(state.grid.positions) : new ArrayList<>();
         Coordinate goal = state.grid.goal;
 
         for (Coordinate position : positions) {

@@ -91,8 +91,9 @@ public class Move {
                     return state;
             }
             State copy=State.deepCopy(state);
-            //copy.grid.grid[x][y] += 1;
             copy.grid.positions.set(positionIndex, new Coordinate(x, y, cost));
+            copy.totalCost+=cost*copy.grid.grid[x][y];
+
             return copy;
         } else {
             System.out.println("Invalid move.");

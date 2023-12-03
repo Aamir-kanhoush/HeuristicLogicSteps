@@ -4,10 +4,14 @@ import java.util.*;
 
 public class State {
     public Grid grid;
+
     public State parentState;
-    public static Map<State, State> parentMap = new HashMap<>();
+    public int totalCost;
+    private Coordinate movedCoordinate;
+
     public State(Grid grid) {
         this.grid = grid;
+        this.totalCost=0;
     }
 
     @Override
@@ -22,7 +26,8 @@ public class State {
         Collections.sort(thisPositionsSorted);
         Collections.sort(objectPositionsSorted);
         return Arrays.deepEquals(this.grid.grid, state.grid.grid)
-                && thisPositionsSorted.equals(objectPositionsSorted);
+                && thisPositionsSorted.equals(objectPositionsSorted)
+                && this.totalCost == state.totalCost;
     }
 
     @Override
@@ -34,6 +39,7 @@ public class State {
             int cost = grid.positions.get(i).getCost();
             string.append("(X: ").append(x).append(", Y:").append(y).append(", Cost: ").append(cost).append(")");
         }
+
         return string.toString();
     }
 
@@ -72,7 +78,10 @@ public class State {
                     State copy = State.deepCopy(state);
                     copy=Move.moveLocation(i, direction, copy);
                     copy.parentState = state;
-                    nextStates.add(copy);
+                    copy.totalCost+=state.grid.positions.get(i).getCost();
+                    if (!nextStates.contains(copy)) {
+                        nextStates.add(copy);
+                    }
                 }
             }
         }
@@ -80,7 +89,17 @@ public class State {
     }
 
     public static State getParentState(State state) {
-        return parentMap.get(state);
+        return state.parentState;
+    }
+
+    public int getTotalCost() {
+        return this.totalCost;
+    }
+
+    public void updateTotalCost() {
+        int movedCoordinateCost = movedCoordinate.getCost();
+        int cellValue = grid.grid[movedCoordinate.getX()][movedCoordinate.getY()];
+        totalCost += movedCoordinateCost + cellValue;
     }
 
 }

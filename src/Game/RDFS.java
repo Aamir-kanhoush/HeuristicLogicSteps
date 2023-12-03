@@ -3,7 +3,7 @@ package Game;
 import java.util.*;
 
 public class RDFS {
-    private static Set<State> visitedStates = new HashSet<>();
+    private static Stack<State> visitedStates = new Stack<>();
     private static boolean solutionFound = false;
 
     public static void searchRDFS(State initialState, int maxDepth) {
@@ -50,6 +50,7 @@ public class RDFS {
 
         System.out.println("Steps to reach the winning state:");
         while (!stack.isEmpty()) {
+
             System.out.println(stack.pop());
         }
     }
